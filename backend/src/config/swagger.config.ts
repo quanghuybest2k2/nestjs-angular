@@ -1,0 +1,19 @@
+import { INestApplication } from '@nestjs/common';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+
+export const configSwagger = (app: INestApplication) => {
+  const config = new DocumentBuilder()
+    .setTitle('JWT')
+    .setDescription("JWT's API definition")
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document, {
+    swaggerOptions: { persistAuthorizationL: true, url: '/api/openApi.json' },
+  });
+  app.getHttpAdapter().get('/api/openApi.json', (req, res) => {
+    res.json(document);
+  });
+};
